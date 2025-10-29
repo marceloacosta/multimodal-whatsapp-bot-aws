@@ -161,25 +161,29 @@ This project is **one way** to build a WhatsApp bot on AWS. Here are alternative
 
 **When to use:** Complex conversational AI where everything needs context
 
-### 3. Agent Core (Not Used Here)
+### 3. Amazon Bedrock AgentCore (Not Used Here)
 
-**What it is:** AWS Bedrock Agent Core - programmatic agent framework
+**What it is:** A newer AWS platform with modular services (Runtime, Gateway, Memory, Identity, Observability) for building agents with any framework.
 
 **How it's different:**
-- You write code to define agent behavior
-- More control than managed agents
-- Still gets agent features (memory, context, tools)
+- Works with any framework (LangGraph, CrewAI, LlamaIndex, etc.)
+- Modular services you can use independently or together
+- More infrastructure services (8-hour runtimes, session isolation, etc.)
+- Framework-agnostic approach
 
 **Pros:**
-- ✅ More control over agent logic
-- ✅ Can use custom LLM providers
-- ✅ Fine-grained error handling
+- ✅ Framework flexibility (bring your own)
+- ✅ Advanced features (long runtimes, browser tool, code interpreter)
+- ✅ Comprehensive observability built-in
 
 **Cons:**
-- ❌ More code to write and maintain
-- ❌ Less "magic" than managed agents
+- ❌ Newer platform (less documentation/examples)
+- ❌ Different pricing model
+- ❌ Requires more architectural decisions
 
-**When to use:** Need agent features but want programmatic control
+**When to use:** Need advanced agent infrastructure with custom frameworks
+
+📚 Learn more: [AWS Bedrock AgentCore](https://aws.amazon.com/bedrock/agentcore/)
 
 ### 4. Agent Framework (LangChain, CrewAI, etc.)
 
