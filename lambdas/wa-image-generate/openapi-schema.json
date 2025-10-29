@@ -1,0 +1,135 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Image Generation Tools",
+    "version": "1.0.0",
+    "description": "Tools for generating images and illustrations using AI models. Supports various styles and customization options."
+  },
+  "paths": {
+    "/generate-image": {
+      "post": {
+        "operationId": "generateImage",
+        "summary": "Generate an image from a text prompt",
+        "description": "Creates an AI-generated image based on a text description. The image is stored in S3 and a presigned URL is returned for viewing. Supports various artistic styles and customization options.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateImageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Image successfully generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateImageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (e.g., missing or invalid prompt)"
+          },
+          "500": {
+            "description": "Image generation failed"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "GenerateImageRequest": {
+        "type": "object",
+        "description": "Request to generate an image from a text prompt",
+        "required": ["prompt"],
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Detailed text description of the image to generate. Be specific about subjects, style, colors, mood, and composition. Example: 'A serene mountain landscape at sunset with purple clouds, oil painting style'",
+            "minLength": 3,
+            "maxLength": 2000
+          },
+          "style": {
+            "type": "string",
+            "description": "Optional artistic style preset for Stable Diffusion. Options: '3d-model', 'analog-film', 'anime', 'cinematic', 'comic-book', 'digital-art', 'enhance', 'fantasy-art', 'isometric', 'line-art', 'low-poly', 'modeling-compound', 'neon-punk', 'origami', 'photographic', 'pixel-art', 'tile-texture'. Only used with Stable Diffusion model.",
+            "enum": [
+              "3d-model",
+              "analog-film",
+              "anime",
+              "cinematic",
+              "comic-book",
+              "digital-art",
+              "enhance",
+              "fantasy-art",
+              "isometric",
+              "line-art",
+              "low-poly",
+              "modeling-compound",
+              "neon-punk",
+              "origami",
+              "photographic",
+              "pixel-art",
+              "tile-texture"
+            ]
+          },
+          "negativePrompt": {
+            "type": "string",
+            "description": "Optional description of what NOT to include in the image. Example: 'blurry, low quality, distorted'. Only used with Titan Image Generator.",
+            "maxLength": 500
+          },
+          "userId": {
+            "type": "string",
+            "description": "Optional user identifier for organizing generated images in S3. Defaults to 'unknown'.",
+            "default": "unknown"
+          }
+        }
+      },
+      "GenerateImageResponse": {
+        "type": "object",
+        "description": "Successful image generation result",
+        "required": ["success", "prompt", "image_url", "s3_uri"],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Whether the image was successfully generated"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "The prompt used to generate the image"
+          },
+          "model": {
+            "type": "string",
+            "description": "The AI model used for generation (e.g., 'stability.stable-diffusion-xl-v1')"
+          },
+          "image_url": {
+            "type": "string",
+            "description": "Presigned HTTPS URL to view/download the generated image (valid for 1 hour)"
+          },
+          "s3_uri": {
+            "type": "string",
+            "description": "S3 URI where the image is stored (e.g., 's3://bucket/generated-images/...')"
+          },
+          "s3_key": {
+            "type": "string",
+            "description": "S3 object key for the image"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "description": "Size of the generated image in bytes"
+          },
+          "format": {
+            "type": "string",
+            "description": "Image format (always 'png')"
+          }
+        }
+      }
+    }
+  }
+}
+
